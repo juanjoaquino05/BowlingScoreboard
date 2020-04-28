@@ -4,14 +4,15 @@ import com.jj.bowlingscoreboard.helpers.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Frame {
-    public int index;
-    public List<String> boxes = new ArrayList<String>();
-    public int total = 0;
+    private int index;
+    private List<String> boxes = new ArrayList<String>();
+    private int total = 0;
     
-    public boolean strike;
-    public boolean spare;
+    private boolean strike;
+    private boolean spare;
     
     
     public Frame(int index, String pointsFromBall){
@@ -26,10 +27,8 @@ public class Frame {
         
         // evaluate spare
         int[] boxesValues = getBoxesWithValue();
-        int box = boxesValues[0];
-        int box2 = boxesValues[1];
         
-        boolean gotSpareOnSecondBall = spare = (!strike) && (box + box2) == 10;
+        boolean gotSpareOnSecondBall = spare = (!strike) && IntStream.of(boxesValues).sum() == 10;
         
         // frames 1 to 9
         if(index < 10){
@@ -47,27 +46,21 @@ public class Frame {
         boxes.add(pinsFromBall);
     }
     
-//    public int getIndex(){
-//        return this.index;
-//    }
-    
     public void calculateTotal(List<Frame> frames){
         int[] boxes = getBoxesWithValue();
         
         int previousFrameScore = previousFrameTotal(frames);
         total += previousFrameScore;
-        if(index == 9) 
-            System.out.print("");
-        if(strike){
+        
+        if(isStrike()){
             total += 10 + getNextTwoBoxes(frames); 
             return;
-        }else if(spare){
+        }else if(isSpare()){
             total += 10 + getNextBox(frames, 1);
             return;
         }else {
             total += boxes[0] + boxes[1];
         }
-        
     }
     
     private int previousFrameTotal(List<Frame> frames){
@@ -76,21 +69,7 @@ public class Frame {
         return frames.get(index - 2).total;
     }
     
-    private int getTotal(List<Frame> frames){
-        int[] boxes = getBoxesWithValue();
-        if(strike){
-            return 10 + getNextTwoBoxes(frames); 
-        }
-            
-        if(spare){
-            return 10 + getNextBox(frames, 1);
-        }
-        
-        return boxes[0] + boxes[1];
-        
-    }
-    
-    private int getNextTwoBoxes(List<Frame> frames){
+    private int getNextTwoBoxes(List<Frame> frames) {
 
         Frame frame = frames.stream()
                 .filter(p -> p.index == index + 1).findAny().orElse(null);
@@ -98,11 +77,10 @@ public class Frame {
         if(frame != null){
             int[] boxes = frame.getBoxesWithValue();
 
-            if(frame.strike) return boxes[0] + frame.getNextBox(frames, 0);
+            if(frame.isStrike()) return boxes[0] + frame.getNextBox(frames, 0);
 
             return boxes[0] + boxes[1];
         }
-//                        System.out.print (index);
 
         if(index == 10){
             int[] boxes = getBoxesWithValue();
@@ -126,7 +104,7 @@ public class Frame {
         if(frame != null){
             int box = Helper.numberValue(frame.boxes.get(0));
 
-            return (frame.strike) ? 10 : box;
+            return (frame.isStrike()) ? 10 : box;
         }
         return 0;
     }
@@ -135,38 +113,66 @@ public class Frame {
         System.out.print("\t");
         
         for (int i = 0; i < boxes.size(); i++) {
-            if(strike && boxes.get(i).equals("10")) {
-                System.out.print("X ");
+            if(isStrike() && boxes.get(i).equals("10")) {
+                System.out.print("  X");
                 continue;
             }
             
-            if(spare && i == 1) System.out.print("/");
+            if(isSpare() && i == 1) System.out.print("/");
             else System.out.print(boxes.get(i) + " ");
         }
     }
     
     public int[] getBoxesWithValue(){
-        int box = Helper.numberValue(boxes.get(0));
-        int box2 = 0;
-        
-        // try to get box 2 if exists
-        try {
-            box2 = Helper.numberValue(boxes.get(1));
-        }
-        catch (IndexOutOfBoundsException e) { }
-        
-        if(index == 10){
-            int box3 = 0;
-        
-            // try to get box 2 if exists
-            try {
-                box3 = Helper.numberValue(boxes.get(2));
-            }
-            catch (IndexOutOfBoundsException e) { }
-            
-            return new int[]{box, box2, box3};
+
+        int[] values = new int [boxes.size()];
+
+        for (int i = 0; i < boxes.size(); i++) {
+            values[i] = Helper.numberValue(boxes.get(i));
         }
         
-        return new int[]{box, box2};
+        return values;
     }
+
+    // Getters And Setters
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public List<String> getBoxes() {
+        return boxes;
+    }
+
+    public void setBoxes(List<String> boxes) {
+        this.boxes = boxes;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public boolean isStrike() {
+        return strike;
+    }
+
+    public void setStrike(boolean strike) {
+        this.strike = strike;
+    }
+
+    public boolean isSpare() {
+        return spare;
+    }
+
+    public void setSpare(boolean spare) {
+        this.spare = spare;
+    }
+    
 }

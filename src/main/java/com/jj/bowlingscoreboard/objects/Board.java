@@ -55,7 +55,7 @@ public class Board {
     public void loadFrames(String filename){
         try {
             File myObj = new File(config.getDirectory().concat(filename));
-            
+
             Scanner myReader = new Scanner(myObj);
             
             while (myReader.hasNextLine()) {
