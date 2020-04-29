@@ -11,12 +11,16 @@ Follow these steps to run the Application.
 
 1. Clone this repository
 
-2. If you are running Windows start ScoreBoard.bat if you are running Linux start ScoreBoard.sh
+2. Modify the file score.dat on data folder to see other scores.
+
+3. If you are running Windows start ScoreBoard.bat if you are running Linux start ScoreBoard.sh
 ```bash
 	# Linux
 	./ScoreBoard.sh
 
 ```
+
+
 If there is a problem running the program be sure you have installed and configured Docker Correctly.
 
 ## Disclaimers
