@@ -40,14 +40,14 @@ public class Board {
     }
     
     public void printScore(){
-        System.out.print("\t");
+        System.out.print("Frame\t\t");
         for (int i = 1; i < 11; i++) {
-            System.out.print(i + "\t");
+            System.out.print(i + "\t" );
         }
         System.out.println("Total");
         
         for (int i = 0; i < players.size(); i++) {
-            System.out.print(players.get(i).getName());
+            System.out.println(players.get(i).getName());
             players.get(i).printFrames();
         }
     }

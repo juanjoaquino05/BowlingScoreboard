@@ -24,19 +24,20 @@ public class Player {
     }
     
     public void printFrames(){
+        System.out.print("Pintfalls");
+
         for (int i = 0; i < frames.size(); i++) {
             frames.get(i).printBoxes();
         }
         
         System.out.println();
-        // System.out.print("Total");
+        System.out.print("Score\t");
         for (int i = 0; i < frames.size(); i++) {
             frames.get(i).calculateTotal(frames);
             
             System.out.print("\t" + frames.get(i).getTotal());
         }
-        System.out.print("\t" + frames.get(frames.size() -1).getTotal());
-        System.out.print("\n");
+        System.out.println("\t" + frames.get(frames.size() -1).getTotal());
     }
     
     public String getName(){
